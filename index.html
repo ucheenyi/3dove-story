@@ -73,7 +73,7 @@
             margin-bottom: 1.2rem;
             text-shadow: 2px 2px 4px rgba(0,0,0,0.9);
             padding: 0.5rem 0;
-            color: #E6F3FF;
+            color: #B8E0FF;
         }
         
         /* Mobile Responsive */
@@ -121,8 +121,8 @@
             }
             
             .btn {
-                padding: 6px 12px;
-                font-size: 12px;
+                padding: 4px 8px;
+                font-size: 10px;
             }
             
             .contact {
@@ -786,6 +786,8 @@
                     this.backgroundAudio.play();
                 } else if (this.backgroundAudio) {
                     this.backgroundAudio.pause();
+                    this.backgroundAudio.currentTime = 0;
+                    console.log('Background music paused and reset');
                     this.backgroundAudio.currentTime = 0;
                 }
                 this.musicToggle.textContent = this.musicEnabled ? '🎵 Music: ON' : '🎵 Music: OFF';
