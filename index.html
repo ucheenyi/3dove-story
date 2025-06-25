@@ -1,0 +1,965 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3dove - AI-Powered Linux & Git Training</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: #000;
+            color: white;
+            overflow: hidden;
+        }
+
+        .slideshow-container {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+        }
+
+        .slide {
+            display: none;
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+
+        .slide.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .slide-content {
+            text-align: center;
+            max-width: 1200px;
+            width: 90%;
+            padding: 3rem;
+            background: linear-gradient(135deg, rgba(0,0,0,0.85), rgba(20,20,20,0.9));
+            border-radius: 25px;
+            backdrop-filter: blur(15px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,215,0,0.2);
+            max-height: 90vh;
+            overflow-y: auto;
+            margin: 2rem;
+            border: 2px solid rgba(255,215,0,0.3);
+        }
+
+        .slide-title {
+            font-size: 3.5rem;
+            font-weight: bold;
+            margin-bottom: 2rem;
+            color: #FFD700;
+            text-shadow: 3px 3px 6px rgba(0,0,0,0.9), 0 0 20px rgba(255,215,0,0.3);
+            background: linear-gradient(45deg, #FFD700, #FFA500);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .slide-text {
+            font-size: 1.4rem;
+            line-height: 1.6;
+            margin-bottom: 1.2rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.9);
+            padding: 0.5rem 0;
+        }
+        
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .slide-content {
+                padding: 1rem;
+                margin: 0.5rem;
+                max-height: 80vh;
+            }
+            
+            .slide-title {
+                font-size: 1.8rem;
+                margin-bottom: 0.8rem;
+            }
+            
+            .slide-text {
+                font-size: 1rem;
+                line-height: 1.4;
+                margin-bottom: 0.6rem;
+            }
+            
+            .company-logo {
+                width: 60px;
+                height: 60px;
+                top: 10px;
+                left: 10px;
+            }
+            
+            .company-logo img {
+                width: 40px;
+                height: 40px;
+            }
+            
+            .slide-indicator {
+                top: 10px;
+                right: 10px;
+                padding: 8px 12px;
+                font-size: 12px;
+            }
+            
+            .controls {
+                bottom: 10px;
+                gap: 8px;
+            }
+            
+            .btn {
+                padding: 8px 16px;
+                font-size: 14px;
+            }
+            
+            .contact {
+                font-size: 1rem;
+            }
+            
+            .price-highlight {
+                font-size: 1.4rem;
+            }
+        }
+
+        .highlight {
+            color: #FFD700;
+            font-weight: bold;
+        }
+
+        .controls {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 10px;
+            z-index: 1000;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            background: rgba(255,215,0,0.9);
+            color: black;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .btn:hover {
+            background: #FFD700;
+            transform: scale(1.05);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .slide-indicator {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(0,0,0,0.7);
+            color: white;
+            padding: 10px 15px;
+            border-radius: 20px;
+            font-size: 14px;
+            z-index: 1000;
+        }
+
+        .contact {
+            font-size: 1.2rem;
+            margin: 0.5rem 0;
+            color: #FFD700;
+        }
+
+        .price-highlight {
+            font-size: 1.8rem;
+            color: #00FF00;
+        }
+
+        .urgency-timer {
+            margin-top: 1rem;
+            padding: 10px;
+            background: rgba(255,0,0,0.2);
+            border-radius: 10px;
+        }
+
+        .timer-text {
+            color: #FF6B6B;
+            font-weight: bold;
+        }
+
+        /* Company Logo */
+        .company-logo {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            width: 90px;
+            height: 90px;
+            background: linear-gradient(135deg, #FFD700, #FFA500);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            box-shadow: 0 6px 20px rgba(255,215,0,0.4);
+            border: 3px solid rgba(255,255,255,0.8);
+        }
+        
+        .company-logo img {
+            width: 65px;
+            height: 65px;
+            object-fit: contain;
+            border-radius: 50%;
+        }
+        
+        /* Special branding for slide 9 */
+        .slide9 .brand-logo {
+            width: 150px;
+            height: 150px;
+            margin: 0 auto 2rem auto;
+            background: linear-gradient(135deg, #FFD700, #FFA500);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 10px 30px rgba(255,215,0,0.5);
+            border: 4px solid rgba(255,255,255,0.9);
+        }
+        
+        .slide9 .brand-logo img {
+            width: 120px;
+            height: 120px;
+            object-fit: contain;
+            border-radius: 50%;
+        }
+        
+        /* Slide backgrounds - Better matched to content */
+        .slide1 { background-image: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('https://images.unsplash.com/photo-1677442136019-21780ecad995?w=1920&h=1080&fit=crop'); } /* AI/Robot theme */
+        .slide2 { background-image: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('https://images.unsplash.com/photo-1551836022-deb4988cc6c0?w=1920&h=1080&fit=crop'); } /* Challenge/Problem theme */
+        .slide3 { background-image: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=1920&h=1080&fit=crop'); } /* Foundation/Building theme */
+        .slide4 { background-image: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('https://images.unsplash.com/photo-1461749280684-dccba630e2f6?w=1920&h=1080&fit=crop'); } /* Coding/Development theme */
+        .slide5 { background-image: linear-gradient(rgba(0,0,0,0.1), rgba(0,0,0,0.1)), url('https://images.unsplash.com/photo-1629654297299-c8506221ca97?w=1920&h=1080&fit=crop'); } /* Linux/Terminal theme */
+        .slide6 { background-image: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=1920&h=1080&fit=crop'); } /* Learning/Education theme */
+        .slide7 { background-image: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url('https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=1920&h=1080&fit=crop'); } /* Career/Success theme */
+        .slide8 { background-image: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=1920&h=1080&fit=crop'); } /* Business/Money theme */
+        .slide9 { background-image: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=1920&h=1080&fit=crop'); } /* Future/Space theme */
+    </style>
+</head>
+<body>
+    <!-- Background Music -->
+    <audio id="backgroundMusic" loop preload="auto" style="display: none;">
+        <source src="./background-music.mp3" type="audio/mpeg">
+        <source src="./background-music.wav" type="audio/wav">
+    </audio>
+    
+    <!-- Company Logo -->
+    <div class="company-logo">
+        <img src="./logo.png" alt="3dove Logo" id="companyLogo">
+    </div>
+    
+    <div class="slideshow-container">
+        <!-- Slide 1 -->
+        <div class="slide slide1 active">
+            <div class="slide-content">
+                <div class="slide-title">The AI Revolution is Here</div>
+                <div class="slide-text">The AI revolution is here, and it's reshaping the tech industry <span class="highlight">faster than ever before</span></div>
+                <div class="slide-text">While entry-level positions are being automated away, <span class="highlight">NEW opportunities</span> are emerging for those who are prepared</div>
+                <div class="slide-text">Over <span class="highlight">300,000+</span> tech jobs were cut in 2023-2024, but companies are investing <span class="highlight">billions in AI infrastructure</span></div>
+                <div class="slide-text">Creating demand for <span class="highlight">AI-ready engineers</span> in Cloud, DevOps, and System Administration</div>
+            </div>
+        </div>
+
+        <!-- Slide 2 -->
+        <div class="slide slide2">
+            <div class="slide-content">
+                <div class="slide-title">The Challenge We Face</div>
+                <div class="slide-text">Fresh graduates and entry-level professionals are finding it <span class="highlight">harder to break into tech</span></div>
+                <div class="slide-text">Why? Because basic tasks can now be done by <span class="highlight">AI working alongside senior engineers</span></div>
+                <div class="slide-text">But here's the opportunity: Companies desperately need engineers who can work <span class="highlight">WITH AI</span></div>
+                <div class="slide-text">In <span class="highlight">Cloud Native environments, Infrastructure Management, DevOps pipelines, and Cybersecurity frameworks</span></div>
+            </div>
+        </div>
+
+        <!-- Slide 3 -->
+        <div class="slide slide3">
+            <div class="slide-content">
+                <div class="slide-title">Your Rock-Solid Foundation</div>
+                <div class="slide-text">Introducing <span class="highlight">3dove's AI-Powered Linux and Git Foundational Training</span></div>
+                <div class="slide-text">The <span class="highlight">rock-solid foundation</span> you need for tomorrow's tech careers</div>
+                <div class="slide-text">This isn't just another Linux course. This is your gateway to:</div>
+                <div class="slide-text"><span class="highlight">Cloud Engineering, DevOps, System Administration, Site Reliability Engineering</span></div>
+                <div class="slide-text"><span class="highlight">Platform Engineering, Cybersecurity, and Technical Support</span> roles</div>
+            </div>
+        </div>
+
+        <!-- Slide 4 -->
+        <div class="slide slide4">
+            <div class="slide-content">
+                <div class="slide-title">What Makes Us Different</div>
+                <div class="slide-text">Here's what makes our program different: <span class="highlight">30+ hours</span> of expert-led live discussions and server demonstrations with industry professionals who've built careers in these fields</div>
+                <div class="slide-text"><span class="highlight">30+ hours</span> of personal, hands-on graded labs on LIVE servers - not simulations, but real cloud infrastructure where you'll practice like professionals</div>
+                <div class="slide-text"><span class="highlight">AI-enhanced learning tools</span> that provide personalized guidance, accelerate your learning speed, and teach you to be fluent with the AI tools that modern engineers use daily</div>
+                <div class="slide-text">Master <span class="highlight">Linux fundamentals, Git version control, command-line proficiency, server management, automation basics, and AI-assisted workflows</span></div>
+            </div>
+        </div>
+
+        <!-- Slide 5 -->
+        <div class="slide slide5">
+            <div class="slide-content">
+                <div class="slide-title">Why Linux & Git?</div>
+                <div class="slide-text">Why Linux and Git? Because they're the <span class="highlight">backbone of EVERY modern tech infrastructure</span></div>
+                <div class="slide-text">Whether you're deploying applications to <span class="highlight">AWS, managing Kubernetes clusters, implementing CI/CD pipelines, or securing enterprise systems</span> - Linux and Git are your foundation</div>
+                <div class="slide-text">And we don't stop there. After completing this foundational training, you'll have access to our <span class="highlight">intermediate and advanced specialized programs in Cloud Architecture, DevOps Engineering, and Cybersecurity</span></div>
+            </div>
+        </div>
+
+        <!-- Slide 6 -->
+        <div class="slide slide6">
+            <div class="slide-content">
+                <div class="slide-title">60-Day Structured Program</div>
+                <div class="slide-text">The program runs for <span class="highlight">60 days with a structured approach</span>: First 30 days: 30 hours of live classes and demos - that's just 1 hour per day, perfectly manageable alongside your current commitments</div>
+                <div class="slide-text">Next 30 days: <span class="highlight">30 hours of graded practical labs</span> where you'll apply everything you've learned on live servers with personalized feedback</div>
+                <div class="slide-text">Prerequisites are simple: <span class="highlight">Basic familiarity with computers, ability to install software, understand file systems, and basic problem-solving skills</span>. If you can browse the web and install apps, you're ready</div>
+            </div>
+        </div>
+
+        <!-- Slide 7 -->
+        <div class="slide slide7">
+            <div class="slide-content">
+                <div class="slide-title">Career-Ready Outcomes</div>
+                <div class="slide-text">Solid Launchpad for: <span class="highlight">Cloud Support Engineer, Linux System Administrator, DevOps Associate</span></div>
+                <div class="slide-text">Plus: <span class="highlight">Technical Support Specialist, Site Reliability Engineer, Platform Engineer, Cybersecurity Analyst</span></div>
+                <div class="slide-text">📁 <span class="highlight">Real portfolio</span> + hands-on server experience + <span class="highlight">AI tools fluency</span></div>
+            </div>
+        </div>
+
+        <!-- Slide 8 -->
+        <div class="slide slide8">
+            <div class="slide-content">
+                <div class="slide-title">Transform Your Career Today!</div>
+                <div class="slide-text">This comprehensive training is available for just <span class="highlight price-highlight"><span style="color: #FF4444; font-weight: bold;">₦49,000</span></span></div>
+                <div class="slide-text">That's only <span class="highlight">$30 USD for 60+ hours</span> of expert instruction and hands-on experience</div>
+                <div class="slide-text">We're <span class="highlight">limiting enrollment</span> to ensure personalized attention and quality lab experiences</div>
+                <div class="slide-text">Ready to future-proof your career?</div>
+                <div class="contact">📱 WhatsApp: +234-808-508-7464</div>
+                <div class="contact">📧 Email: info@3dove.cloud</div>
+                <div class="slide-text">Don't let AI replace you - <span class="highlight">learn to work WITH it!</span></div>
+                <div class="slide-text">Enroll now and build the foundation for your <span class="highlight">AI-powered tech career</span></div>
+                <div class="urgency-timer">
+                    <div class="timer-text">Limited Time Offer!</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 9 -->
+        <div class="slide slide9">
+            <div class="slide-content">
+                <div class="brand-logo">
+                    <img src="./logo.png" alt="3dove Logo">
+                </div>
+                <div class="slide-title">3dove</div>
+                <div class="slide-text">Building Tomorrow's <span class="highlight">AI-Ready Engineers</span> Today</div>
+                <div class="slide-text">Message us now to <span class="highlight">secure your spot</span></div>
+                <div class="slide-text">Your <span class="highlight">future in tech</span> starts here</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="slide-indicator" id="slideIndicator">Slide 1 of 9</div>
+
+    <div class="controls">
+        <button class="btn" id="playPauseBtn">▶️ Play</button>
+        <button class="btn" id="prevBtn">⏮️ Previous</button>
+        <button class="btn" id="nextBtn">⏭️ Next</button>
+        <button class="btn" id="musicToggle">🎵 Music: ON</button>
+        <button class="btn" id="voiceToggle">🎤 Voice: ON</button>
+    </div>
+
+    <script>
+        class SlideShow {
+            constructor() {
+                this.slides = document.querySelectorAll('.slide');
+                this.currentSlide = 0;
+                this.isAutoPlaying = false;
+                this.musicEnabled = true;
+                this.voiceEnabled = true;
+                this.currentSlideIndex = 0;
+                this.currentTextIndex = 0;
+                
+                this.playPauseBtn = document.getElementById('playPauseBtn');
+                this.prevBtn = document.getElementById('prevBtn');
+                this.nextBtn = document.getElementById('nextBtn');
+                this.musicToggle = document.getElementById('musicToggle');
+                this.voiceToggle = document.getElementById('voiceToggle');
+                this.slideIndicator = document.getElementById('slideIndicator');
+                
+                this.synth = window.speechSynthesis;
+                this.setupEventListeners();
+                this.setupBackgroundMusic();
+                
+                this.slideTexts = [
+                    ["The AI revolution is here, and it's reshaping the tech industry faster than ever before. While entry-level positions are being automated away, NEW opportunities are emerging for those who are prepared.", "Over 300,000 tech jobs were cut in 2023-2024, but companies are investing billions in AI infrastructure, creating demand for AI-ready engineers in Cloud, DevOps, and System Administration."],
+                    ["Fresh graduates and entry-level professionals are finding it harder to break into tech. Why? Because basic tasks can now be done by AI working alongside senior engineers. But here's the opportunity.", "Companies desperately need engineers who can work WITH AI in Cloud Native environments, Infrastructure Management, DevOps pipelines, and Cybersecurity frameworks."],
+                    ["Introducing 3dove's AI-Powered Linux and Git Foundational Training - the rock-solid foundation you need for tomorrow's tech careers.", "This isn't just another Linux course. This is your gateway to Cloud Engineering, DevOps, System Administration, Site Reliability Engineering, Platform Engineering, Cybersecurity, and Technical Support roles."],
+                    ["Here's what makes our program different: 30+ hours of expert-led live discussions and server demonstrations with industry professionals who've built careers in these fields.", "30+ hours of personal, hands-on graded labs on LIVE servers - not simulations, but real cloud infrastructure where you'll practice like professionals.", "AI-enhanced learning tools that provide personalized guidance, accelerate your learning speed, and teach you to be fluent with the AI tools that modern engineers use daily.", "Master Linux fundamentals, Git version control, command-line proficiency, server management, automation basics, and AI-assisted workflows."],
+                    ["Why Linux and Git? Because they're the backbone of EVERY modern tech infrastructure. Whether you're deploying applications to AWS, managing Kubernetes clusters, implementing CI/CD pipelines, or securing enterprise systems - Linux and Git are your foundation.", "And we don't stop there. After completing this foundational training, you'll have access to our intermediate and advanced specialized programs in Cloud Architecture, DevOps Engineering, and Cybersecurity."],
+                    ["The program runs for 60 days with a structured approach: First 30 days: 30 hours of live classes and demos - that's just 1 hour per day, perfectly manageable alongside your current commitments.", "Next 30 days: 30 hours of graded practical labs where you'll apply everything you've learned on live servers with personalized feedback.", "Prerequisites are simple: Basic familiarity with computers, ability to install software, understand file systems, and basic problem-solving skills. If you can browse the web and install apps, you're ready."],
+                    ["Upon completion, you'll be equipped for roles like: Cloud Support Engineer, Linux System Administrator, DevOps Associate, Technical Support Specialist, Site Reliability Engineer, Platform Engineer, and Cybersecurity Analyst.", "You'll have a portfolio of real projects, hands-on server experience, and fluency with AI tools that set you apart from other candidates."],
+                    ["This comprehensive training is available for just 49,000 Naira - that's only 30 US dollars for 60+ hours of expert instruction and hands-on experience.", "We're limiting enrollment to ensure personalized attention and quality lab experiences.", "Ready to future-proof your career? Contact us on WhatsApp at +234-808-508-7464 or email info@3dove.cloud.", "Don't let AI replace you - learn to work WITH it. Enroll now and build the foundation for your AI-powered tech career."],
+                    ["3dove - Building Tomorrow's AI-Ready Engineers Today.", "Message us now to secure your spot. Your future in tech starts here."]
+                ];
+                
+                setTimeout(() => this.updateSlideIndicator(), 100);
+            }
+
+            setupEventListeners() {
+                if (this.playPauseBtn) this.playPauseBtn.addEventListener('click', () => this.togglePlayPause());
+                if (this.prevBtn) this.prevBtn.addEventListener('click', () => this.previousSlide());
+                if (this.nextBtn) this.nextBtn.addEventListener('click', () => this.nextSlide());
+                if (this.musicToggle) this.musicToggle.addEventListener('click', () => this.toggleMusic());
+                if (this.voiceToggle) this.voiceToggle.addEventListener('click', () => this.toggleVoice());
+            }
+            
+            togglePlayPause() {
+                if (this.isAutoPlaying) {
+                    this.pauseAutoPlay();
+                } else {
+                    this.startAutoPlay();
+                }
+            }
+
+            async startAutoPlay() {
+                if (this.isAutoPlaying) return;
+                
+                if (!this.audioContext || this.audioContext.state === 'closed') {
+                    this.setupBackgroundMusic();
+                }
+                
+                if (this.audioContext && this.audioContext.state === 'suspended') {
+                    await this.audioContext.resume();
+                }
+                
+                this.isAutoPlaying = true;
+                this.playPauseBtn.textContent = '⏸️ Pause';
+                
+                if (this.musicEnabled) {
+                    this.backgroundAudio = document.getElementById('backgroundMusic');
+                    if (this.backgroundAudio) {
+                        this.backgroundAudio.volume = 0.2;
+                        this.backgroundAudio.removeAttribute('loop');
+                        this.setupLoopedSegment();
+                    } else {
+                        this.createAmbientMusic();
+                    }
+                }
+                
+                this.startAutoSlideshow();
+            }
+            
+            setupLoopedSegment() {
+                this.backgroundAudio.volume = 0.08;
+                this.currentSegment = 'intro'; // 'intro' or 'bridge'
+                this.segmentStartTime = 0;
+                
+                this.backgroundAudio.currentTime = 0;
+                
+                this.backgroundAudio.play().then(() => {
+                    console.log('Background music playing - intro + bridge loop');
+                }).catch(() => {
+                    console.log('Audio playback failed, using fallback');
+                    this.createAmbientMusic();
+                });
+                
+                this.backgroundAudio.addEventListener('timeupdate', () => {
+                    if (this.currentSegment === 'intro' && this.backgroundAudio.currentTime >= 15) {
+                        // Switch to bridge section (4:40-4:50)
+                        this.currentSegment = 'bridge';
+                        this.backgroundAudio.currentTime = 280; // 4:40 in seconds
+                        this.segmentStartTime = 280;
+                    } else if (this.currentSegment === 'bridge' && this.backgroundAudio.currentTime >= 290) {
+                        // Switch back to intro (0-15 seconds)
+                        this.currentSegment = 'intro';
+                        this.backgroundAudio.currentTime = 0;
+                        this.segmentStartTime = 0;
+                    }
+                });
+            }
+            
+            createAmbientMusic() {
+                // Soft ambient pad
+                this.ambientOsc = this.audioContext.createOscillator();
+                this.ambientGain = this.audioContext.createGain();
+                this.ambientOsc.connect(this.ambientGain);
+                this.ambientGain.connect(this.audioContext.destination);
+                
+                this.ambientOsc.type = 'triangle';
+                this.ambientOsc.frequency.setValueAtTime(220, this.audioContext.currentTime);
+                this.ambientGain.gain.setValueAtTime(0.03, this.audioContext.currentTime);
+                this.ambientOsc.start(this.audioContext.currentTime);
+                
+                // Gentle harmony
+                this.harmonyOsc = this.audioContext.createOscillator();
+                this.harmonyGain = this.audioContext.createGain();
+                this.harmonyOsc.connect(this.harmonyGain);
+                this.harmonyGain.connect(this.audioContext.destination);
+                
+                this.harmonyOsc.type = 'sine';
+                this.harmonyOsc.frequency.setValueAtTime(330, this.audioContext.currentTime);
+                this.harmonyGain.gain.setValueAtTime(0.02, this.audioContext.currentTime);
+                this.harmonyOsc.start(this.audioContext.currentTime);
+            }
+            
+            playMelodicProgression() {
+                // Gentle, melodic progression
+                const progression = [
+                    { lead: 523, bass: 131 },  // C Major
+                    { lead: 392, bass: 98 },   // G Major
+                    { lead: 440, bass: 110 },  // A Minor
+                    { lead: 349, bass: 87 }    // F Major
+                ];
+                
+                let chordIndex = 0;
+                const changeChord = () => {
+                    if (!this.isAutoPlaying) return;
+                    
+                    const chord = progression[chordIndex];
+                    const time = this.audioContext.currentTime;
+                    
+                    // Smooth, slow transitions
+                    this.leadOsc.frequency.exponentialRampToValueAtTime(chord.lead, time + 3);
+                    this.bassOsc.frequency.exponentialRampToValueAtTime(chord.bass, time + 3);
+                    
+                    chordIndex = (chordIndex + 1) % progression.length;
+                    
+                    setTimeout(changeChord, 6000); // Slower changes
+                };
+                
+                changeChord();
+            }
+            
+            playKick() {
+                const kick = this.audioContext.createOscillator();
+                const kickGain = this.audioContext.createGain();
+                kick.connect(kickGain);
+                kickGain.connect(this.audioContext.destination);
+                
+                kick.frequency.setValueAtTime(60, this.audioContext.currentTime);
+                kick.type = 'sine';
+                kickGain.gain.setValueAtTime(0.2, this.audioContext.currentTime);
+                kickGain.gain.exponentialRampToValueAtTime(0.001, this.audioContext.currentTime + 0.1);
+                
+                kick.start(this.audioContext.currentTime);
+                kick.stop(this.audioContext.currentTime + 0.1);
+            }
+            
+            createBassLine() {
+                this.bassOsc = this.audioContext.createOscillator();
+                this.bassGain = this.audioContext.createGain();
+                this.bassOsc.connect(this.bassGain);
+                this.bassGain.connect(this.audioContext.destination);
+                
+                this.bassOsc.type = 'sawtooth';
+                this.bassOsc.frequency.setValueAtTime(35, this.audioContext.currentTime);
+                this.bassGain.gain.setValueAtTime(0.3, this.audioContext.currentTime);
+                this.bassOsc.start(this.audioContext.currentTime);
+                
+                // Add sub bass
+                this.subBassOsc = this.audioContext.createOscillator();
+                this.subBassGain = this.audioContext.createGain();
+                this.subBassOsc.connect(this.subBassGain);
+                this.subBassGain.connect(this.audioContext.destination);
+                
+                this.subBassOsc.type = 'sine';
+                this.subBassOsc.frequency.setValueAtTime(18, this.audioContext.currentTime);
+                this.subBassGain.gain.setValueAtTime(0.2, this.audioContext.currentTime);
+                this.subBassOsc.start(this.audioContext.currentTime);
+            }
+            
+            playKickDrum() {
+                const kick = this.audioContext.createOscillator();
+                const kickGain = this.audioContext.createGain();
+                kick.connect(kickGain);
+                kickGain.connect(this.audioContext.destination);
+                
+                kick.frequency.setValueAtTime(50, this.audioContext.currentTime);
+                kick.type = 'sine';
+                kickGain.gain.setValueAtTime(0.15, this.audioContext.currentTime);
+                kickGain.gain.exponentialRampToValueAtTime(0.001, this.audioContext.currentTime + 0.2);
+                
+                kick.start(this.audioContext.currentTime);
+                kick.stop(this.audioContext.currentTime + 0.2);
+            }
+            
+            playHiHat() {
+                const hihat = this.audioContext.createOscillator();
+                const hihatGain = this.audioContext.createGain();
+                hihat.connect(hihatGain);
+                hihatGain.connect(this.audioContext.destination);
+                
+                hihat.frequency.setValueAtTime(10000, this.audioContext.currentTime);
+                hihat.type = 'square';
+                hihatGain.gain.setValueAtTime(0.03, this.audioContext.currentTime);
+                hihatGain.gain.exponentialRampToValueAtTime(0.001, this.audioContext.currentTime + 0.05);
+                
+                hihat.start(this.audioContext.currentTime);
+                hihat.stop(this.audioContext.currentTime + 0.05);
+                
+                this.startAutoSlideshow();
+            }
+
+            startAutoSlideshow() {
+                if (!this.isAutoPlaying) return;
+                
+                this.currentSlideIndex = this.currentSlide;
+                this.currentTextIndex = 0;
+                this.playCurrentText();
+            }
+            
+            playCurrentText() {
+                if (!this.isAutoPlaying) return;
+                
+                const currentSlideTexts = this.slideTexts[this.currentSlideIndex];
+                
+                if (!currentSlideTexts || this.currentSlideIndex >= this.slideTexts.length) {
+                    this.pauseAutoPlay();
+                    return;
+                }
+                
+                if (this.currentTextIndex >= currentSlideTexts.length) {
+                    this.moveToNextSlide();
+                    return;
+                }
+                
+                const textToSpeak = currentSlideTexts[this.currentTextIndex];
+                
+                if (this.voiceEnabled) {
+                    const utterance = new SpeechSynthesisUtterance(textToSpeak);
+                    utterance.rate = 1.1;
+                utterance.pitch = 1.1;
+                utterance.volume = 1.0;
+                
+                // Prefer Nigerian/African accent voices
+                const voices = speechSynthesis.getVoices();
+                if (voices.length > 0) {
+                    const nigerianVoice = voices.find(voice => 
+                        voice.lang.includes('en-NG') ||
+                        voice.lang.includes('en-ZA') ||
+                        voice.lang.includes('en-GH') ||
+                        voice.name.toLowerCase().includes('nigeria') ||
+                        voice.name.toLowerCase().includes('african') ||
+                        voice.name.toLowerCase().includes('adaora') ||
+                        voice.name.toLowerCase().includes('tunde')
+                    ) || voices.find(voice => 
+                        voice.name.toLowerCase().includes('female') ||
+                        voice.name.toLowerCase().includes('woman')
+                    ) || voices.find(voice => voice.lang.includes('en')) || voices[0];
+                    utterance.voice = nigerianVoice;
+                }
+                    utterance.volume = 1;
+                    
+                    utterance.onend = () => {
+                        this.currentTextIndex++;
+                        setTimeout(() => this.playCurrentText(), 800);
+                    };
+                    
+                    utterance.onerror = () => {
+                        this.currentTextIndex++;
+                        setTimeout(() => this.playCurrentText(), 800);
+                    };
+                    
+                    this.synth.speak(utterance);
+                } else {
+                    setTimeout(() => {
+                        this.currentTextIndex++;
+                        this.playCurrentText();
+                    }, 3000);
+                }
+            }
+            
+            moveToNextSlide() {
+                if (!this.isAutoPlaying) return;
+                
+                setTimeout(() => {
+                    this.currentSlideIndex++;
+                    
+                    if (this.currentSlideIndex >= this.slideTexts.length) {
+                        this.pauseAutoPlay();
+                        return;
+                    }
+                    
+                    this.nextSlide();
+                    this.currentSlideIndex = this.currentSlide;
+                    this.currentTextIndex = 0;
+                    this.playCurrentText();
+                }, 1500);
+            }
+
+            pauseAutoPlay() {
+                this.isAutoPlaying = false;
+                this.playPauseBtn.textContent = '▶️ Play';
+                
+                if (this.synth) {
+                    this.synth.cancel();
+                }
+                
+                if (this.mainOsc) {
+                    this.mainOsc.stop();
+                    this.mainOsc = null;
+                }
+                if (this.kickInterval) {
+                    clearInterval(this.kickInterval);
+                    this.kickInterval = null;
+                }
+                if (this.snareInterval) {
+                    clearInterval(this.snareInterval);
+                    this.snareInterval = null;
+                }
+                if (this.hihatInterval) {
+                    clearInterval(this.hihatInterval);
+                    this.hihatInterval = null;
+                }
+                if (this.bassFilter) {
+                    this.bassFilter = null;
+                }
+                
+                if (this.techSoundInterval) {
+                    clearInterval(this.techSoundInterval);
+                    this.techSoundInterval = null;
+                }
+            }
+
+            nextSlide() {
+                this.currentSlide++;
+                if (this.currentSlide >= this.slides.length) {
+                    this.currentSlide = 0;
+                }
+                this.showSlide(this.currentSlide);
+            }
+
+            previousSlide() {
+                this.currentSlide--;
+                if (this.currentSlide < 0) {
+                    this.currentSlide = this.slides.length - 1;
+                }
+                this.showSlide(this.currentSlide);
+            }
+
+            showSlide(index) {
+                this.slides.forEach((slide, i) => {
+                    slide.classList.toggle('active', i === index);
+                });
+                this.updateSlideIndicator();
+            }
+
+            updateSlideIndicator() {
+                if (this.slideIndicator) {
+                    this.slideIndicator.textContent = `Slide ${this.currentSlide + 1} of ${this.slides.length}`;
+                }
+            }
+
+            toggleMusic() {
+                this.musicEnabled = !this.musicEnabled;
+                this.musicToggle.textContent = this.musicEnabled ? '🎵 Music: ON' : '🎵 Music: OFF';
+            }
+            
+            toggleVoice() {
+                this.voiceEnabled = !this.voiceEnabled;
+                this.voiceToggle.textContent = this.voiceEnabled ? '🎤 Voice: ON' : '🎤 Voice: OFF';
+            }
+
+            setupBackgroundMusic() {
+                this.audioContext = null;
+                try {
+                    this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                } catch (e) {
+                    console.log('Web Audio API not supported');
+                }
+            }
+            
+            startContinuousBackgroundMusic() {
+                if (!this.audioContext) return;
+                
+                try {
+                    this.createUpbeatTrack();
+                    
+                    this.techSoundInterval = setInterval(() => {
+                        if (this.isAutoPlaying) {
+                            this.playRhythmicSound();
+                        }
+                    }, 3000);
+                    
+                } catch (error) {
+                    console.error('Error starting background music:', error);
+                }
+            }
+            
+            createUpbeatTrack() {
+                // Bass and drum background music
+                this.createDrumTrack();
+                this.createBassLine();
+            }
+            
+            createDrumTrack() {
+                // Kick drum - strong beat
+                this.kickInterval = setInterval(() => {
+                    if (!this.isAutoPlaying) return;
+                    this.playKickDrum();
+                }, 600); // Steady beat
+                
+                // Snare drum - backbeat
+                this.snareInterval = setInterval(() => {
+                    if (!this.isAutoPlaying) return;
+                    this.playSnare();
+                }, 1200); // On beats 2 and 4
+                
+                // Hi-hat - rhythm
+                this.hihatInterval = setInterval(() => {
+                    if (!this.isAutoPlaying) return;
+                    this.playHiHat();
+                }, 300); // Consistent rhythm
+            }
+            
+            createBassLine() {
+                // Deep bass line
+                this.bassOsc = this.audioContext.createOscillator();
+                this.bassGain = this.audioContext.createGain();
+                this.bassFilter = this.audioContext.createBiquadFilter();
+                
+                this.bassOsc.connect(this.bassFilter);
+                this.bassFilter.connect(this.bassGain);
+                this.bassGain.connect(this.audioContext.destination);
+                
+                this.bassOsc.type = 'sawtooth';
+                this.bassOsc.frequency.setValueAtTime(55, this.audioContext.currentTime); // Low A
+                this.bassFilter.type = 'lowpass';
+                this.bassFilter.frequency.setValueAtTime(200, this.audioContext.currentTime);
+                this.bassGain.gain.setValueAtTime(0.12, this.audioContext.currentTime);
+                
+                this.bassOsc.start(this.audioContext.currentTime);
+                this.playBassPattern();
+            }
+            
+            playKickDrum() {
+                const kick = this.audioContext.createOscillator();
+                const kickGain = this.audioContext.createGain();
+                kick.connect(kickGain);
+                kickGain.connect(this.audioContext.destination);
+                
+                kick.frequency.setValueAtTime(50, this.audioContext.currentTime);
+                kick.type = 'sine';
+                kickGain.gain.setValueAtTime(0.15, this.audioContext.currentTime);
+                kickGain.gain.exponentialRampToValueAtTime(0.001, this.audioContext.currentTime + 0.2);
+                
+                kick.start(this.audioContext.currentTime);
+                kick.stop(this.audioContext.currentTime + 0.2);
+            }
+            
+            playSnare() {
+                const snare = this.audioContext.createOscillator();
+                const snareGain = this.audioContext.createGain();
+                const snareNoise = this.audioContext.createOscillator();
+                
+                snare.connect(snareGain);
+                snareNoise.connect(snareGain);
+                snareGain.connect(this.audioContext.destination);
+                
+                snare.frequency.setValueAtTime(200, this.audioContext.currentTime);
+                snareNoise.frequency.setValueAtTime(1000, this.audioContext.currentTime);
+                snare.type = 'triangle';
+                snareNoise.type = 'square';
+                snareGain.gain.setValueAtTime(0.08, this.audioContext.currentTime);
+                snareGain.gain.exponentialRampToValueAtTime(0.001, this.audioContext.currentTime + 0.1);
+                
+                snare.start(this.audioContext.currentTime);
+                snareNoise.start(this.audioContext.currentTime);
+                snare.stop(this.audioContext.currentTime + 0.1);
+                snareNoise.stop(this.audioContext.currentTime + 0.1);
+            }
+            
+            playHiHat() {
+                const hihat = this.audioContext.createOscillator();
+                const hihatGain = this.audioContext.createGain();
+                hihat.connect(hihatGain);
+                hihatGain.connect(this.audioContext.destination);
+                
+                hihat.frequency.setValueAtTime(10000, this.audioContext.currentTime);
+                hihat.type = 'square';
+                hihatGain.gain.setValueAtTime(0.03, this.audioContext.currentTime);
+                hihatGain.gain.exponentialRampToValueAtTime(0.001, this.audioContext.currentTime + 0.05);
+                
+                hihat.start(this.audioContext.currentTime);
+                hihat.stop(this.audioContext.currentTime + 0.05);
+            }
+            
+            playBassPattern() {
+                // Bass line pattern
+                const bassNotes = [
+                    55,   // A1
+                    65.4, // C2
+                    73.4, // D2
+                    49    // G1
+                ];
+                
+                let noteIndex = 0;
+                const changeBassNote = () => {
+                    if (!this.isAutoPlaying) return;
+                    
+                    const note = bassNotes[noteIndex];
+                    const time = this.audioContext.currentTime;
+                    
+                    this.bassOsc.frequency.exponentialRampToValueAtTime(note, time + 0.3);
+                    
+                    noteIndex = (noteIndex + 1) % bassNotes.length;
+                    
+                    setTimeout(changeBassNote, 1200); // Bass note changes
+                };
+                
+                changeBassNote();
+            }
+            
+            playRhythmicSound() {
+                if (!this.audioContext || this.audioContext.state !== 'running') return;
+                
+                try {
+                    const chime = this.audioContext.createOscillator();
+                    const chimeGain = this.audioContext.createGain();
+                    
+                    chime.connect(chimeGain);
+                    chimeGain.connect(this.audioContext.destination);
+                    
+                    chime.frequency.setValueAtTime(880, this.audioContext.currentTime);
+                    chime.type = 'sine';
+                    
+                    chimeGain.gain.setValueAtTime(0.05, this.audioContext.currentTime);
+                    chimeGain.gain.exponentialRampToValueAtTime(0.001, this.audioContext.currentTime + 0.5);
+                    
+                    chime.start(this.audioContext.currentTime);
+                    chime.stop(this.audioContext.currentTime + 0.5);
+                    
+                } catch (error) {
+                    console.error('Error playing chime sound:', error);
+                }
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            new SlideShow();
+        });
+    </script>
+</body>
+</html>
