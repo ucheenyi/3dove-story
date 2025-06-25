@@ -73,6 +73,7 @@
             margin-bottom: 1.2rem;
             text-shadow: 2px 2px 4px rgba(0,0,0,0.9);
             padding: 0.5rem 0;
+            color: #E6F3FF;
         }
         
         /* Mobile Responsive */
@@ -80,7 +81,8 @@
             .slide-content {
                 padding: 1rem;
                 margin: 0.5rem;
-                max-height: 80vh;
+                max-height: 70vh;
+                margin-bottom: 4rem;
             }
             
             .slide-title {
@@ -119,8 +121,8 @@
             }
             
             .btn {
-                padding: 8px 16px;
-                font-size: 14px;
+                padding: 6px 12px;
+                font-size: 12px;
             }
             
             .contact {
@@ -134,6 +136,11 @@
 
         .highlight {
             color: #FFD700;
+            font-weight: bold;
+        }
+        
+        .blue-accent {
+            color: #66B3FF;
             font-weight: bold;
         }
 
@@ -352,7 +359,7 @@
         <div class="slide slide8">
             <div class="slide-content">
                 <div class="slide-title">Transform Your Career Today!</div>
-                <div class="slide-text">This comprehensive training is available for just <span class="highlight price-highlight"><span style="color: #FF4444; font-weight: bold;">₦49,000</span></span></div>
+                <div class="slide-text">This comprehensive training is available for just <span class="highlight price-highlight"><span style="color: #4488FF; font-weight: bold;">₦49,000</span></span></div>
                 <div class="slide-text">That's only <span class="highlight">$30 USD for 60+ hours</span> of expert instruction and hands-on experience</div>
                 <div class="slide-text">We're <span class="highlight">limiting enrollment</span> to ensure personalized attention and quality lab experiences</div>
                 <div class="slide-text">Ready to future-proof your career?</div>
@@ -774,11 +781,22 @@
 
             toggleMusic() {
                 this.musicEnabled = !this.musicEnabled;
+                
+                if (this.musicEnabled && this.backgroundAudio) {
+                    this.backgroundAudio.play();
+                } else if (this.backgroundAudio) {
+                    this.backgroundAudio.pause();
+                    this.backgroundAudio.currentTime = 0;
+                }
                 this.musicToggle.textContent = this.musicEnabled ? '🎵 Music: ON' : '🎵 Music: OFF';
             }
             
             toggleVoice() {
                 this.voiceEnabled = !this.voiceEnabled;
+                
+                if (!this.voiceEnabled && this.synth) {
+                    this.synth.cancel();
+                }
                 this.voiceToggle.textContent = this.voiceEnabled ? '🎤 Voice: ON' : '🎤 Voice: OFF';
             }
 
